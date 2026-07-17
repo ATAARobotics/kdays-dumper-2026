@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.ShootSystem;
 
 public class RobotContainer {
   private double MaxSpeed =
@@ -39,6 +40,8 @@ public class RobotContainer {
   private final CommandXboxController joystick = new CommandXboxController(0);
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+  public final ShootSystem shooter = new ShootSystem();
 
   public RobotContainer() {
     configureBindings();
@@ -85,6 +88,14 @@ public class RobotContainer {
 
     // Reset the field-centric heading on left bumper press.
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+    joystick.povDown().onTrue(shooter.runShooter(0.1)).onFalse(shooter.runShooter(0.0));
+    joystick.povLeft().onTrue(shooter.runShooter(0.2)).onFalse(shooter.runShooter(0.0));
+    joystick.povUp().onTrue(shooter.runShooter(0.3)).onFalse(shooter.runShooter(0.0));
+    joystick.povRight().onTrue(shooter.runShooter(0.4)).onFalse(shooter.runShooter(0.0));
+
+    joystick.rightTrigger().onTrue(shooter.runShooter(0.45)).onFalse(shooter.runShooter(0.0));
+    joystick.leftTrigger().onTrue(shooter.runShooter(0.5)).onFalse(shooter.runShooter(0.0));
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }
